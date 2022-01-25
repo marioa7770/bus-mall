@@ -55,27 +55,10 @@ section img:hover {
   cursor: pointer;
 }
 
-ul {
-  margin: 1rem;
+section + div {
+  grid-column-start: 2;
+  max-height: 400px;
+  padding: 2rem;
 }
 
-/* -- button -- */
-section + div {
-  background-color: rgba(128, 128, 128, 0.734);
-  color: lightgrey;
-  padding: .5rem 1rem;
-  width: max-content;
-  height: max-content;
-  font-size: .8rem;
-  margin: 1rem;
-  pointer-events: none;
-}
-section + div.clicks-allowed {
-  background-color: rosybrown;
-  color: white;
-  cursor: pointer;
-  pointer-events: auto;
-}
-section + div.clicks-allowed:hover {
-  background-color: rgb(211, 187, 175)
-}
+
