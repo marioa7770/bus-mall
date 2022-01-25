@@ -4,20 +4,19 @@
 
 let productArray = [];
 let counter = 0;
-let counterMaxValue = 3;
+let counterMaxValue = 15;
+let indexArray = [];
 
 const myContainer = document.querySelector
-  ('section');
+('section');
 const myButton = document.querySelector
-  ('section + div');
+// eslint-disable-next-line no-unexpected-multiline
+('section + div');
 
 let image1 = document.querySelector('section img:first-child');
 let image2 = document.querySelector('section img:nth-child(2)');
 
 //functional logic
-
-
-
 
 function Product(name, fileExtension = 'jpg') {
   this.views = 0;
@@ -28,17 +27,28 @@ function Product(name, fileExtension = 'jpg') {
 
 }
 
-function getRandomProduct() {
+function selectRandomProduct() {
   return Math.floor(Math.random() * productArray.length);
 }
 
 function renderProduct() {
 
-  let product1 = getRandomProduct();
-  let product2 = getRandomProduct();
-  while (product1 === product2) {
-    product2 = getRandomProduct();
+
+
+
+  while (indexArray.length < 4) {
+    let randomNumber = selectRandomProduct();
+    if (!indexArray.includes(randomNumber)) {
+      indexArray.push(randomNumber);
+    }
   }
+
+  console.log(indexArray);
+
+  let product1 = indexArray.shift();
+  let product2 = indexArray.shift();
+
+
 
   image1.src = productArray[product1].src;
   image1.alt = productArray[product1].name;
@@ -54,7 +64,7 @@ function handleClick(event) {
   }
 
   counter++;
-  // find out what image was clicked on 
+  // find out what image was clicked on
   let productClicked = event.target.alt;
 
   // increment likes on that product
@@ -68,38 +78,74 @@ function handleClick(event) {
   }
   // render new goats on the page
 
-   
+
   if (counter === counterMaxValue) {
     //stop the game
     myContainer.removeEventListener('click', handleClick);
-    myButton.className = 'clicks-allowed';
-    myButton.addEventListener('click', handleButtonClick);
-  }
-
-  renderProduct();
-
-}
-
-function handleButtonClick(event) {
-  if (counter === counterMaxValue) {
-    renderResults();
+    renderChart();
+  } else {
+    renderProduct();
   }
 
 }
 
-function renderResults() {
-  let ul = document.querySelector('ul');
+function renderChart() {
+
+  const labels = ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange' ,'Pink'];
+  let productNames = [];
+  let productLikes = [];
+  let productViews = [];
   for (let i = 0; i < productArray.length; i++) {
-    let message = `${productArray[i].name} had ${productArray[i].views} views
-      and was clicked on ${productArray[i].likes} times`;
-    let li = document.createElement('li');
-    li.textContent = message;
-    ul.appendChild(li);
+    productNames.push(productArray[i].name);
+    productLikes.push(productArray[i].likes);
+    productViews.push(productArray[i].views);
+
   }
+
+  const data = {
+    labels: productNames,
+    datasets: [ {
+      label: '# of views',
+      data: productViews,
+      backgroundColor: [
+        'rgba(255, 99, 132, 0.2)',
+      ],
+      borderColor: [
+        'rgb(255, 99, 132)',
+      ],
+      borderWidth: 1
+    },
+    {
+      label: '# of likes',
+      data: productLikes,
+      backgroundColor: [
+       'rgba(255, 159, 64, 0.2)',
+       ],
+      borderColor: [
+        'rgb(255, 159, 64)',
+     ],
+      borderWidth: 1
+    }]
+  };
+  const config = {
+    type: 'bar',
+    data: data,
+    options: {
+      scales: {
+        y: {
+          beginAtZero: true
+        }
+      }
+    },
+  };
+
+  const chart = document.getElementById('myCanvas');
+  const myChart = new Chart(chart, config);
 
 }
 
-// code that runs on page load
+
+
 
 new Product('bag');
 new Product('banana');
